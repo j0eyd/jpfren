@@ -1,0 +1,16 @@
+{
+    "manifest_version": 2,
+    "name" : "jpfren",
+    "version": "0.1",
+
+    "description": "fast and efficient swiss-army knife for translation between english and japanese",
+    "icons": {
+        "logo": "data/jpfren_logo.png"
+    },
+
+    "content_scripts": [
+        {
+            
+        }
+    ]
+}
