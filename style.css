@@ -1,0 +1,13 @@
+/*GENERAL*/
+
+title {
+    font-size: 2em;
+    font-weight: bold;
+    color: #000000;
+}	
+
+legend {
+    font-size: 1.5em;
+    font-weight: italic;
+    color: #3a3a3a;
+}
