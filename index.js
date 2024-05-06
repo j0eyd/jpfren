@@ -1,16 +1,36 @@
-const puppeteer = require('puppeteer');
+const fetch = require('node-fetch');
+module.exports = translateText;
 
-const jp_to_en_url = "https://translate.google.com/?sl=ja&tl=en&op=translate";
-const en_to_jp_url = "https://translate.google.com/?sl=en&tl=ja&op=translate";
-
-const  get_japanese_from_english = async (inputString) => {
-  /*launch the browser; load google translate*/
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(en_to_jp_url);
-  
-  await page.screenshot({ path: 'data/screenshot.jpg'});
-  await browser.close();
+async function translateText(inputString) {
+  const res1 = await fetch("https://libretranslate.com/translate", {
+    method: "POST",
+    body: JSON.stringify({
+      q: inputString,
+      source: "auto",
+      target: "en",
+      format: "text",
+      api_key: ""
+    }),
+    headers: { "Content-Type": "application/json" }
+  });
+  result = await res1.json();
+  if (result["detectedLanguage"] != "en"){
+    return result["translatedText"];
+  }
+  else {
+    const res2 = await fetch("https://libretranslate.com/translate", {
+      method: "POST",
+      body: JSON.stringify({
+        q: inputString,
+        source: "auto",
+        target: "jp",
+        format: "text",
+        api_key: ""
+      }),
+      headers: { "Content-Type": "application/json" }
+    });
+    result = await res2.json();
+    return result["translatedText"];
+  }
 }
 
-get_japanese_from_english();
