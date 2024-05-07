@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>jpfren</title>
 </head>
 <body>
-    <div>
-        <h2 id="title">jpfren</h2>
-        <p id="legend">the swiss army knife to fast japanese translation</p>
+    <div id="header">
+        <img class="title_logo" src="data/jpfren_logo.png" alt="jpfren logo">
+        <h1>JPfren</h1>
     </div>
+    <p id="legend">the swiss army knife to fast japanese translation</p>
     <div>
-        <script src = "index.js"></script>
-        <form id="form">
-            <input type="text" id="input" placeholder="Enter text to translate">
-            <button type="submit" id="submit" onclick="translateText(document.getElementById('input').value)">Translate</button>
-        </form>
+        <input type="text" id="textInput" oninput="mockFetch(this.value)">
+        <p id="translatedText"></p>
+        <script src="index.js"></script>
     </div>
 </body>
 </html> 
