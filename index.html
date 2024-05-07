@@ -13,10 +13,17 @@
         <h1>JPfren</h1>
     </div>
     <p id="legend">the swiss army knife to fast japanese translation</p>
-    <div>
-        <input type="text" id="textInput" oninput="mockFetch(this.value)">
-        <p id="translatedText"></p>
-        <script src="index.js"></script>
+    <div class="container">
+        <div class="top-section">
+            <input type="text" id="input" placeholder="Type here..." oninput="mockFetch(this.value)">
+        </div>
+        <div class="bottom-section">
+          <p id="output"></p>
+        </div>
+    </div>
+    <script src="index.js"></script>
+    <div id="footer">
+        <p>© 2024 JPfren, Joey David</p>
     </div>
 </body>
-</html> 
+</html>

@@ -53,5 +53,5 @@ async function translateText(inputText) {
 translateText("Hello, world!").then(console.log);
 
 async function mockFetch(inputString) {
-  document.getElementById("translatedText").innerText = inputString + "fetched mock";
+  document.getElementById("output").innerText = inputString + "fetched mock";
 }
