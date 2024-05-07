@@ -2,7 +2,9 @@
     "manifest_version": 2,
     "name" : "jpfren",
     "version": "0.1",
-
+    "host_permissions": [
+        "https://translate.google.com/"
+    ],
     "description": "fast and efficient swiss-army knife for translation between english and japanese",
     "icons": {
         "logo": "data/jpfren_logo.png"

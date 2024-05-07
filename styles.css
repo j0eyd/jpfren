@@ -84,6 +84,7 @@ legend {
     justify-content: center;
     align-items: center;
     border: 2px solid black;
+    border-bottom: 1px solid black;
 }
 
 .bottom-section {
@@ -94,6 +95,7 @@ legend {
     justify-content: center;
     align-items: center;
     border: 2px solid black;
+    border-top: 2px solid black;
 }
 
 #footer {

@@ -1,57 +1,32 @@
-const fetch = require('node-fetch');
-const https = require('https');
+import { translate } from '@vitalets/google-translate-api';
 
-module.exports = {
-  fetchTranslation,
-  getSourceLang,
-  translateText,
-  mockFetch
-};
+const displayedText = document.getElementById("output").innerText; 
 
-const agent = new https.Agent({  
-  rejectUnauthorized: false
-});
+// webpack.config.js
+// module.exports = {
+//   mode: 'development',
+//   entry: './index.js',
+//   output : {
+//     filename: 'bundle.js'
+//   }
+// };
 
-async function fetchTranslation(inputText, targetLang) {
-  try {
-    const response = await fetch("https://libretranslate.com/translate", {
-      method: "POST",
-      body: JSON.stringify({
-        q: inputText,
-        source: "auto",
-        target: targetLang,
-        format: "text",
-        api_key: ""
-      }),
-      headers: { "Content-Type": "application/json" },
-      agent
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error('Fetch error:', error);
-    throw error;
+async function fetchAndTranslate(inputString) {
+  const response = await translate(inputString, { to: 'ja' });
+  const returnString = response.text;
+  if (response.raw.src === "ja") {
+    returnString = await translate(inputString, { to: 'en' });
   }
+  return returnString;
 }
 
-async function getSourceLang(inputText) {
-  const data = await fetchTranslation(inputText, "en");
-  return data.detectedLanguage;
+async function fillOutput(inputString) {
+  const translatedString = await fetchAndTranslate(inputString);
+  displayedText = translatedString;
 }
-
-async function translateText(inputText) {
-  const sourceLang = await getSourceLang(inputText);
-  if (sourceLang != "ja") {
-    const data = await fetchTranslation(inputText, "ja");
-    return data.translatedText;
-  } else {
-    const data = await fetchTranslation(inputText, "en");
-    return data.translatedText;
-  }
-}
-
-translateText("Hello, world!").then(console.log);
 
 async function mockFetch(inputString) {
-  document.getElementById("output").innerText = inputString + "fetched mock";
+  displayedText = inputString + "fetched mock";
 }
+
+// export { fetchAndTranslate, fillOutput, mockFetch };
