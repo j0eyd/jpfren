@@ -1,18 +1,17 @@
 {
-    "manifest_version": 2,
-    "name" : "jpfren",
-    "version": "0.1",
+    "author": "Joey David",
+    "manifest_version": 3,
+    "name": "JPfren",
+    "short_name": "jpfren",
+    "description": "The swiss army knife to fast Japanese translation",
+    "version": "1.0.0",
+    "action": {
+        "default_popup": "public/index.html"
+    },
+    "icons": {
+        "48": "data/jpfren_logo.png"
+    },
     "host_permissions": [
         "https://translate.google.com/"
-    ],
-    "description": "fast and efficient swiss-army knife for translation between english and japanese",
-    "icons": {
-        "logo": "data/jpfren_logo.png"
-    },
-
-    "content_scripts": [
-        {
-            
-        }
     ]
 }

@@ -1,6 +1,26 @@
 {
+  "name": "jpfren",
+  "version": "1.0.0",
+  "description": "fast and efficient japanese translation",
+  "main": "public/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "Joey <joeydavid99@gmail.com>",
+  "license": "ISC",
   "dependencies": {
     "@vitalets/google-translate-api": "^9.2.0",
-    "n": "^9.2.3"
-  }
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "http-proxy-agent": "^7.0.2",
+    "stream-http": "^3.2.0",
+    "tunnel": "^0.0.6"
+  },
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "repository": "git@github.com:j0eyd/jpfren.git"
 }
