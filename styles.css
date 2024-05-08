@@ -1,3 +1,20 @@
+:root {
+    --primary-color: #000000;
+    --secondary-color: #ffffff;
+    --tertiary-color: #3a3a3a;
+    --quaternary-color: #707070;
+    --quinary-color: #f0f0f0;
+    --senary-color: #f8f8f8;
+    --septenary-color: #f5f5f5;
+    --octonary-color: #f2f2f2;
+    --nonary-color: #efefef;
+    --denary-color: #eaeaea;
+    --primary-font: 'Freeman', sans-serif;
+    --secondary-font: 'Courier New', Courier, monospace;
+    --flag-opacity: 0.6;
+    --border-width: 5px;
+}
+
 /*GENERAL*/
 * {
     font-family: "Freeman", sans-serif;
@@ -20,32 +37,6 @@ p {
     color: #707070;
 }
 
-#top-section {
-    flex: 1;
-    padding: 10px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#bottom-section {
-    flex: 1;
-    padding: 10px;
-    overflow: hidden;
-    border-top: 1px solid black;
-}
-
-
-body {
-    width: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
 h1 {
     font-family: "Freeman", sans-serif;
     font-weight: 800;
@@ -53,17 +44,6 @@ h1 {
     margin-left: 0.5rem;
 }
 
-#input {
-    
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-}
 
 #header {
     display: flex;
@@ -82,26 +62,37 @@ legend {
     height: auto;
 }
 
-.top-section {
-    flex: 1;
-    padding: 10px;
-    overflow: hidden;
+body {
+    min-width: 70vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    border: 2px solid black;
-    border-bottom: 1px solid black;
+    justify-content: center;
+    height: auto;
 }
 
-.bottom-section {
-    flex: 1;
-    padding: 10px;
-    overflow: hidden;
+.text-section {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    border: 2px solid black;
-    border-top: 2px solid black;
+    justify-content: center;
+    padding: 9px;
+    width: 50vh;
+    height: 20vh;
+    border: var(--border-width) solid black;
+    background-size: 100%; /* or 'cover' */
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#top-section {
+    border-bottom: calc(var(--border-width) / 2) solid black;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 1)), url("data/flags/en.png");
+}
+
+#bottom-section {
+    border-top: calc(var(--border-width) / 2) solid black;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2)), url("data/flags/ja.png");
 }
 
 #footer {
