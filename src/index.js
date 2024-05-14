@@ -1,50 +1,93 @@
-import { translate } from '@vitalets/google-translate-api';
-// import tunnel from 'tunnel';
+let words;
 
-const inputLang = "en";
-const outputLang = "ja";
+fetch('../dict/simplified_dictionnary.json')
+.then(response => response.json())
+.then(data => {
+    words = data;
+    console.log(words);
+})
+.catch(error => console.error('Error loading JSON file:', error));
 
+let inputLang = "en";
+let outputLang = "ja";
+let inputCharType = "undefined";
+
+
+async function setLang(inputCharType){
+  if (inputCharType == "roman"){
+    inputLang = "en";
+    outputLang = "ja";
+  }
+  else if (inputCharType == "kana"){
+    inputLang = "ja";
+    outputLang = "en";
+  }
+  else if (inputCharType == "kanji"){
+    inputLang = "ja";
+    outputLang = "en";
+  }
+  else throw "Invalid inputCharType";
+}
+
+//The dictionnary file is dict/simplified_dictionnary.json
 
 // Translation
 async function fetchAndTranslate(inputString) {
-  try {
-    let response = await translate(inputString, { to: 'ja', fetchOptions: { agent } });
-    if (response.raw.src === "ja") {
-      inputLang = "ja";
-      outputLang = "en";
-      response = await translate(inputString, { to: 'en', fetchOptions: { agent } });
+  //define the input and output language
+  let firstChar = inputString.charAt(0);
+  if (firstChar.match(/[a-zA-Z]/)){
+    inputCharType = "roman";
+  }
+  else if (firstChar.match(/[\u3040-\u309F]/)){
+    inputCharType = "kana";
+  }
+  else if (firstChar.match(/[\u4E00-\u9FAF]/)){
+    inputCharType = "kanji";
+  }
+  else throw "Invalid inputCharType";
+  await setLang(inputCharType);
+  //update the flags
+  updateFlags();
+
+  //look into the json dictionnary
+  if (inputCharType == "roman"){
+    for (let word in words){
+      if (word["e"] == inputString){
+        return[word["kj"], word["kn"]];
+      }
+      return null;
     }
-    else {
-      inputLang = response.raw.src;
-      outputLang = "ja";
+  }
+  else if (inputLang == "kanji"){
+    for (let word in words){
+      if (word["kj"] == inputString){
+        return[word["e"]];
+      }
+      return null;
     }
-    const returnString = response.text;
-    updateFlags();
-    return returnString;
-  } catch (e) {
-    if (e.name === 'TooManyRequestsError') {
-      console.log('Error 429: Too many requests. Switching to new proxy.');
+  }
+  else if (inputLang == "kana"){
+    for (let word in words){
+      if (word["kn"] == inputString){
+        return[word["e"]];
+      }
+      return null;
     }
   }
 }
 
-window.fillOutput = async function fillOutput(inputString) {
-  const translatedString = await fetchAndTranslate(inputString);
-  document.getElementById("output").innerText = "lalala";
+async function fillOutput(inputString) {
+  let translatedString = await fetchAndTranslate(inputString);
+  document.getElementById("output").innerText = translatedString[0];
 }
 
 // Flags
 async function updateFlags() {
-  document.getElementById("top-section").style.backgroundImage = `url(./data/flags/${inputLang}.png)`;
-  document.getElementById("bottom-section").style.backgroundImage = `url(./data/flags/${outputLang}.png)`;
+  document.getElementById("top-section").style.backgroundImage = `url(../data/flags/${inputLang}.png)`;
+  document.getElementById("bottom-section").style.backgroundImage = `url(../data/flags/${outputLang}.png)`;
 }
 
 // Event listeners
 document.getElementById('input').addEventListener('input', function(event) {
   fillOutput(event.target.value); //replace fillOutput with mockFill for testing
 });
-
-window.mockFill = async function mockFill(inputString) {
-  document.getElementById("output").innerText = inputString;
-}
-
