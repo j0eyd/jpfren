@@ -1,11 +1,12 @@
 let words;
 let inputLang = "en", outputLang = "ja";
 
+
+//The dictionnary file is dict/simplified_dictionnary.json
 await fetch('../dict/simplified_dictionnary.json')
 .then(response => response.json())
 .then(data => {
     words = data.words;
-    console.log(words);
 })
 .catch(error => console.error('Error loading JSON file:', error));
 
@@ -25,11 +26,9 @@ async function setLang(inputCharType){
   else throw "Invalid inputCharType";
 }
 
-//The dictionnary file is dict/simplified_dictionnary.json
-
 function offerNextTranslation(){}
 
-// Translation
+// Detects character type, handles it and calls dictionaryLookup
 async function fetchAndTranslate(inputString) {
   inputString = inputString.toLowerCase();
   let inputCharType = "undefined";
@@ -47,16 +46,13 @@ async function fetchAndTranslate(inputString) {
 
   await setLang(inputCharType);
   updateFlags();
-  console.log(inputCharType);
-  console.log(inputString);
   return dictionnaryLookup(inputString, inputCharType);
 }
 
-
+//finds inputString matches in the dictionnary 
 async function dictionnaryLookup(inputString, inputCharType){
   let index, matches = [];
   let inputStrLen = inputString.length;
-  console.log(inputStrLen)
   switch (inputCharType){
     case "roman":
       index = "e";
@@ -79,29 +75,81 @@ async function dictionnaryLookup(inputString, inputCharType){
   return matches;
 }
 
+let possibleTranslations = [];
+let index = 0;
 
-async function fillOutput(inputString) {
-  let possibleTranslations = await fetchAndTranslate(inputString);
-  //if undefined return, no words were found - display no translation.
+async function displayTranslation(currentIndex){
+  //if undefined return, no words wecurrentIndexre found - display no translation.
   if (possibleTranslations[0] == undefined) {
-    document.getElementById("output").innerText = "";
+    document.getElementById("output").innerText = "No translation found.";
+    return;
   }
   //if there are multiple options, it's kanji and kana, so it's en to jp
-  else if (possibleTranslations[0].length > 1) {
+  else if (possibleTranslations[currentIndex].length > 1
+      && !possibleTranslations[currentIndex][1].match(/[a-zA-Z]/) ) {
     document.getElementById("output").innerText = 
-      "Kanji: " + possibleTranslations[0][0] + "\nKana: "
-      + possibleTranslations[0][1];
+      "Kanji: " + possibleTranslations[currentIndex][0] + 
+      "\nKana: " + possibleTranslations[currentIndex][1];
   }
-  else document.getElementById("output").innerText = possibleTranslations[0];
+  else document.getElementById("output").innerText =
+    "English: " + possibleTranslations[currentIndex];
+  document.getElementById("translation-info").innerText =
+    "Translation " + (1+index) + " of " + possibleTranslations.length;
 }
 
-// Flags
+//display the number of translations and handle arrow hiding
+async function displayOtherMeaningOptions(){
+  if (possibleTranslations.length < 2){
+    document.getElementById("right-arrow").style.display = "none";
+    document.getElementById("left-arrow").style.display = "none";
+  }
+  else {
+    document.getElementById("right-arrow").style.display = "block";
+    document.getElementById("left-arrow").style.display = "block";
+  }
+}
+
+//handle arrow presses and display the next translation
+window.nextTranslation = function(direction){
+  if (direction == "right"){
+    if (index == possibleTranslations.length - 1) index = 0;
+    else index++;
+  }
+  else if (direction == "left"){
+    if (index == 0) index = possibleTranslations.length - 1;
+    else index--;
+  }
+  else throw "Invalid direction";
+  displayTranslation(index);
+}
+
+//call on form input event
+async function handleInput(inputString) {
+  possibleTranslations = await fetchAndTranslate(inputString);
+  index = 0;
+  displayOtherMeaningOptions();
+  displayTranslation(index);
+}
+
+//Flags
 async function updateFlags() {
   document.getElementById("top-section").style.backgroundImage = `url(../data/flags/${inputLang}.png)`;
   document.getElementById("bottom-section").style.backgroundImage = `url(../data/flags/${outputLang}.png)`;
 }
 
-// Event listeners
+addEventListener("keydown", function(event) {
+  if (event.key == "ArrowRight" || event.key == "ArrowDown")
+    nextTranslation("right");
+  else if (event.key == "ArrowLeft" || event.key == "ArrowUp")
+    nextTranslation("left");
+});
+
+//Event listeners
 document.getElementById('input').addEventListener('input', function(event) {
-  fillOutput(event.target.value); //replace fillOutput with mockFill for testing
+  //if the input is empty, clear the output
+  if (event.target.value == "") {
+    document.getElementById("output").innerText = "Start typing for a translation!";
+    return;
+  }
+  handleInput(event.target.value);
 });

@@ -18,8 +18,13 @@
             <input type="text" id="input" placeholder="Enter text here">
         </div>
         <div class="text-section" id="bottom-section">
-          <p id="output"></p>
+            <img class="arrow" id="left-arrow" src="../data/left_arrow.png" 
+                alt="left arrow" onclick="nextTranslation('left')">
+            <p id="output"></p>
+            <img class="arrow" id="right-arrow" src="../data/right_arrow.png" 
+                alt="right arrow" onclick="nextTranslation('right')">
         </div>
+        <p id="translation-info"></p>
     </div>
     <div id="footer">
         <p>© 2024 JPfren, Joey David</p>
