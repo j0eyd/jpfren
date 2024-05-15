@@ -1,4 +1,5 @@
 let words;
+let inputLang = "en", outputLang = "ja";
 
 await fetch('../dict/simplified_dictionnary.json')
 .then(response => response.json())
@@ -7,11 +8,6 @@ await fetch('../dict/simplified_dictionnary.json')
     console.log(words);
 })
 .catch(error => console.error('Error loading JSON file:', error));
-
-let inputLang = "en";
-let outputLang = "ja";
-let inputCharType = "undefined";
-
 
 async function setLang(inputCharType){
   if (inputCharType == "roman"){
@@ -35,9 +31,8 @@ function offerNextTranslation(){}
 
 // Translation
 async function fetchAndTranslate(inputString) {
-  //define the input and output language
   inputString = inputString.toLowerCase();
-  console.log(inputString)
+  let inputCharType = "undefined";
   let firstChar = inputString.charAt(0);
   if (firstChar.match(/[a-zA-Z]/)){
     inputCharType = "roman";
@@ -49,50 +44,55 @@ async function fetchAndTranslate(inputString) {
     inputCharType = "kanji";
   }
   else throw "Invalid inputCharType";
-  await setLang(inputCharType);
-  //update the flags
-  updateFlags();
 
-  let result;
-  //look into the json dictionnary
-  if (inputCharType == "roman"){
-    for (let element of words) {
-      if (element["e"].toLowerCase() == inputString){
-        //introduce a next option section?
-        result = [element["kj"], element["kn"]];
-        break;
-      }
-    };
-  }
-  if (inputCharType == "kanji"){
-    for (let element of words) {
-      if (element["kj"] == inputString){
-        //introduce a next option section?
-        result = [element["e"]];
-        break;
-      }
-    };
-  }
-  if (inputCharType == "kana"){
-    for (let element of words) {
-      if (element["kn"] == inputString){
-        //introduce a next option section?
-        result = [element["e"]];
-        break;
-      }
-    };
-  }
-  return result;
+  await setLang(inputCharType);
+  updateFlags();
+  console.log(inputCharType);
+  console.log(inputString);
+  return dictionnaryLookup(inputString, inputCharType);
 }
 
-async function fillOutput(inputString) {
-  let translatedString = await fetchAndTranslate(inputString);
-  if (translatedString.length > 1) {
-    document.getElementById("output").innerText = 
-      "Kanji: " + translatedString[0] + "\nKana: "
-      + translatedString[1];
+
+async function dictionnaryLookup(inputString, inputCharType){
+  let index, matches = [];
+  let inputStrLen = inputString.length;
+  console.log(inputStrLen)
+  switch (inputCharType){
+    case "roman":
+      index = "e";
+      break;
+    case "kanji":
+      index = "kj";
+      break;
+    case "kana":
+      index = "kn";
+      break;
   }
-  else document.getElementById("output").innerText = translatedString[0];
+
+  for (let element of words) {
+    if (inputString == element[index]){
+      if (index == "e") matches.push([element["kj"], element["kn"]]);
+      else matches.push(element["e"]);
+    }
+  }
+  console.log(matches)
+  return matches;
+}
+
+
+async function fillOutput(inputString) {
+  let possibleTranslations = await fetchAndTranslate(inputString);
+  //if undefined return, no words were found - display no translation.
+  if (possibleTranslations[0] == undefined) {
+    document.getElementById("output").innerText = "";
+  }
+  //if there are multiple options, it's kanji and kana, so it's en to jp
+  else if (possibleTranslations[0].length > 1) {
+    document.getElementById("output").innerText = 
+      "Kanji: " + possibleTranslations[0][0] + "\nKana: "
+      + possibleTranslations[0][1];
+  }
+  else document.getElementById("output").innerText = possibleTranslations[0];
 }
 
 // Flags
