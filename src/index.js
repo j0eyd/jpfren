@@ -1,9 +1,9 @@
 let words;
 
-fetch('../dict/simplified_dictionnary.json')
+await fetch('../dict/simplified_dictionnary.json')
 .then(response => response.json())
 .then(data => {
-    words = data;
+    words = data.words;
     console.log(words);
 })
 .catch(error => console.error('Error loading JSON file:', error));
@@ -31,9 +31,13 @@ async function setLang(inputCharType){
 
 //The dictionnary file is dict/simplified_dictionnary.json
 
+function offerNextTranslation(){}
+
 // Translation
 async function fetchAndTranslate(inputString) {
   //define the input and output language
+  inputString = inputString.toLowerCase();
+  console.log(inputString)
   let firstChar = inputString.charAt(0);
   if (firstChar.match(/[a-zA-Z]/)){
     inputCharType = "roman";
@@ -49,36 +53,46 @@ async function fetchAndTranslate(inputString) {
   //update the flags
   updateFlags();
 
+  let result;
   //look into the json dictionnary
   if (inputCharType == "roman"){
-    for (let word in words){
-      if (word["e"] == inputString){
-        return[word["kj"], word["kn"]];
+    for (let element of words) {
+      if (element["e"].toLowerCase() == inputString){
+        //introduce a next option section?
+        result = [element["kj"], element["kn"]];
+        break;
       }
-      return null;
-    }
+    };
   }
-  else if (inputLang == "kanji"){
-    for (let word in words){
-      if (word["kj"] == inputString){
-        return[word["e"]];
+  if (inputCharType == "kanji"){
+    for (let element of words) {
+      if (element["kj"] == inputString){
+        //introduce a next option section?
+        result = [element["e"]];
+        break;
       }
-      return null;
-    }
+    };
   }
-  else if (inputLang == "kana"){
-    for (let word in words){
-      if (word["kn"] == inputString){
-        return[word["e"]];
+  if (inputCharType == "kana"){
+    for (let element of words) {
+      if (element["kn"] == inputString){
+        //introduce a next option section?
+        result = [element["e"]];
+        break;
       }
-      return null;
-    }
+    };
   }
+  return result;
 }
 
 async function fillOutput(inputString) {
   let translatedString = await fetchAndTranslate(inputString);
-  document.getElementById("output").innerText = translatedString[0];
+  if (translatedString.length > 1) {
+    document.getElementById("output").innerText = 
+      "Kanji: " + translatedString[0] + "\nKana: "
+      + translatedString[1];
+  }
+  else document.getElementById("output").innerText = translatedString[0];
 }
 
 // Flags
