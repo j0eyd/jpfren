@@ -1,6 +1,7 @@
+import { updateFlags, displayOtherMeaningOptions } from './display.js';
+
 let words;
 let inputLang = "en", outputLang = "ja";
-
 
 //The dictionnary file is dict/simplified_dictionnary.json
 await fetch('../dict/simplified_dictionnary.json')
@@ -45,7 +46,7 @@ async function fetchAndTranslate(inputString) {
   else throw "Invalid inputCharType";
 
   await setLang(inputCharType);
-  updateFlags();
+  updateFlags(inputLang, outputLang);
   return dictionnaryLookup(inputString, inputCharType);
 }
 
@@ -97,18 +98,6 @@ async function displayTranslation(currentIndex){
     "Translation " + (1+index) + " of " + possibleTranslations.length;
 }
 
-//display the number of translations and handle arrow hiding
-async function displayOtherMeaningOptions(){
-  if (possibleTranslations.length < 2){
-    document.getElementById("right-arrow").style.display = "none";
-    document.getElementById("left-arrow").style.display = "none";
-  }
-  else {
-    document.getElementById("right-arrow").style.display = "block";
-    document.getElementById("left-arrow").style.display = "block";
-  }
-}
-
 //handle arrow presses and display the next translation
 window.nextTranslation = function(direction){
   if (direction == "right"){
@@ -127,14 +116,8 @@ window.nextTranslation = function(direction){
 async function handleInput(inputString) {
   possibleTranslations = await fetchAndTranslate(inputString);
   index = 0;
-  displayOtherMeaningOptions();
+  displayOtherMeaningOptions(possibleTranslations.length);
   displayTranslation(index);
-}
-
-//Flags
-async function updateFlags() {
-  document.getElementById("top-section").style.backgroundImage = `url(../data/flags/${inputLang}.png)`;
-  document.getElementById("bottom-section").style.backgroundImage = `url(../data/flags/${outputLang}.png)`;
 }
 
 addEventListener("keydown", function(event) {
