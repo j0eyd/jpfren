@@ -16,13 +16,21 @@
     <div class="container">
         <div class="text-section" id="top-section">
             <input type="text" id="input" placeholder="Enter text here">
+            <div class="flag-indicator">
+                <img class="flag" id="input-flag" src="../data/flags/en.png" alt="en-flag">
+            </div>
         </div>
         <div class="text-section" id="bottom-section">
-            <img class="arrow" id="left-arrow" src="../data/left_arrow.png" 
-                alt="left arrow" onclick="nextTranslation('left')">
-            <p id="output"></p>
-            <img class="arrow" id="right-arrow" src="../data/right_arrow.png" 
-                alt="right arrow" onclick="nextTranslation('right')">
+            <div id="output-and-arrows">
+                <img class="arrow" id="left-arrow" src="../data/left_arrow.png" 
+                    alt="left arrow" onclick="nextTranslation('left')">
+                <p id="output"></p>
+                <img class="arrow" id="right-arrow" src="../data/right_arrow.png" 
+                    alt="right arrow" onclick="nextTranslation('right')">
+            </div>
+            <div class="flag-indicator">
+                <img class="flag" id="output-flag" src="../data/flags/ja.png" alt="jp-flag">
+            </div>
         </div>
         <p id="translation-info"></p>
     </div>

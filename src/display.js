@@ -1,7 +1,7 @@
 //Flags
 async function updateFlags(inputLang, outputLang) {
-    document.getElementById("top-section").style.backgroundImage = `url(../data/flags/${inputLang}.png)`;
-    document.getElementById("bottom-section").style.backgroundImage = `url(../data/flags/${outputLang}.png)`;
+    document.getElementById("input-flag").src = `../data/flags/${inputLang}.png`;
+    document.getElementById("output-flag").src = `../data/flags/${outputLang}.png`;
   }
 
 //display the number of translations and handle arrow hiding
